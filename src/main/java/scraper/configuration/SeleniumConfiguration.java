@@ -17,7 +17,7 @@ public class SeleniumConfiguration {
 @Bean
 public ChromeDriver driver() {
         final ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless");
+        //chromeOptions.addArguments("--headless");
 return new ChromeDriver(chromeOptions);
 }
 
