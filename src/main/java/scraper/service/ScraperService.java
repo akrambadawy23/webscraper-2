@@ -132,8 +132,8 @@ public class ScraperService {
     void PostConstruct() throws InterruptedException, IOException {
 
 
-            //PrettyTable table = new PrettyTable("Teams", "Spread", "Total", "Moneyline");
-            //PrettyTable table = new PrettyTable("Teams", "Spread", "Total", "Moneyline");
+        //PrettyTable table = new PrettyTable("Teams", "Spread", "Total", "Moneyline");
+        //PrettyTable table = new PrettyTable("Teams", "Spread", "Total", "Moneyline");
 
        /*CompletableFuture<Void> a = CompletableFuture.runAsync(this::scrape);
        CompletableFuture<Void> b = CompletableFuture.runAsync(this::scrape2);
@@ -144,20 +144,20 @@ public class ScraperService {
        }
 */
         long startTime = System.nanoTime();
-            scrape2();
+        scrape2();
         long endTime = System.nanoTime();
         long totalTime = (endTime - startTime)/1000000000;
         System.out.println("TIME RUN: " + totalTime + " seconds");
 
-      startTime = System.nanoTime();
+        startTime = System.nanoTime();
         scrape3();
-         endTime = System.nanoTime();
-         totalTime = (endTime - startTime)/1000000000;
+        endTime = System.nanoTime();
+        totalTime = (endTime - startTime)/1000000000;
         System.out.println("TIME RUN: " + totalTime + " seconds");
-            //scrape4();
+        //scrape4();
 
 
-            //odds.removeIf(Objects::isNull);
+        //odds.removeIf(Objects::isNull);
 
 /*
         for(int i = 0; i < Math.min(teams.size(), 0.333333333*odds.size()-2); i++) {
@@ -239,11 +239,11 @@ else
             }
             */
 
-            //System.out.println("DEBUG!!!!");
-            //System.out.print(table);
-            ArbFinder(teams, odds);
-            //scrape2();
-        }
+        //System.out.println("DEBUG!!!!");
+        //System.out.print(table);
+        ArbFinder(teams, odds);
+        //scrape2();
+    }
 
 
 
@@ -298,7 +298,7 @@ oddsText.add("DEBUG");
         driver2.get(URL2 + "atp");
         //driver2.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-      //  teams2.clear();
+        //  teams2.clear();
         //odds2.clear();
         int a = odds.size();
         int b = teams.size();
@@ -349,7 +349,7 @@ Collections.swap(odds, j+2, j+1);
         }
 */
         //driver2.quit();
-System.out.println("YIPPEE!!!");
+        System.out.println("YIPPEE!!!");
     }
 
     public void scrape3() {
@@ -360,11 +360,11 @@ System.out.println("YIPPEE!!!");
 
         //driver3.get(URL3 + "college-basketball");
         //WebDriverWait wait = new WebDriverWait(driver3, Duration.ofSeconds(5));
-       // wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//*[@class='bet-btn']")));
+        // wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//*[@class='bet-btn']")));
         driver3.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         //teams3.clear();
-       // odds3.clear();
+        // odds3.clear();
         int a = odds.size();
         int j = teams.size();
         System.out.println(j);
@@ -374,20 +374,20 @@ System.out.println("YIPPEE!!!");
             String add ="(//*[@class='name'])" + "[" + (i+1) + "]";
             try { if(!duplicateSet2.contains(driver3.findElement(By.xpath(add)).getAttribute("textContent").trim())) {
                 System.out.println(driver3.findElement(By.xpath(add)).getText().trim());
-                teams.add(driver3.findElement(By.xpath(add)));
                 String add2;
                 if(i%2 == 0)
-                 add2 = "(.//*[@class='bet-btn' or @class='empty-bet' or @class='bet-btn suspended' or @class='bet-btn-price-increased' or @class='bet-btn-price-decreased'])[3]";
+                    add2 = "(.//*[@class='bet-btn' or @class='empty-bet' or @class='bet-btn suspended' or @class='bet-btn-price-increased' or @class='bet-btn-price-decreased'])[3]";
                 else
                     add2 = "(.//*[@class='bet-btn' or @class='empty-bet' or @class='bet-btn suspended' or @class='bet-btn-price-increased' or @class='bet-btn-price-decreased'])[4]";
                 //i2++;
                 //System.out.println(add2);
+                System.out.println(driver3.findElement(By.xpath(add)).findElement(By.xpath("./../../../../../..")).findElement(By.xpath(add2)).getAttribute("textContent").trim());
 
                 //System.out.println(teams.size());
+                teams.add(driver3.findElement(By.xpath(add)));
                 odds.add(driver3.findElement(By.xpath(add)).findElement(By.xpath("./../../../../../..")).findElement(By.xpath(add2)));
                 //System.out.println(driver3.findElement(By.xpath(add)).findElement(By.xpath("./../../../../../..")).findElement(By.xpath(add2)));
 
-                System.out.println(driver3.findElement(By.xpath(add)).findElement(By.xpath("./../../../../../..")).findElement(By.xpath(add2)).getAttribute("textContent").trim());
                 //j++;
                 duplicateSet2.add(driver3.findElement(By.xpath(add)).getAttribute("textContent").trim());
             }
@@ -462,79 +462,97 @@ System.out.println("YIPPEE!!!");
 
     public void ArbFinder(List<WebElement> teams, List<WebElement> odds) throws IOException {
         //PrettyTable table2 = new PrettyTable("Team", "Spread", "Total", "Moneyline", "Spread2", "Total2", "Moneyline2");
-String[][] Duplicates = new String[teams.size()][3];
-int count = 0;
-int k = 0;
-int count2 = 0;
-String[] teamsText = new String[teams.size()];
-String[] oddsText = new String[odds.size()];
+        String[][] Duplicates = new String[teams.size()][3];
+        int count = 0;
+        int k = 0;
+        int count2 = 0;
+        String[] teamsText = new String[teams.size()];
+        String[] oddsText = new String[odds.size()];
+
 
         for(int q = 0; q < teams.size(); q++) {
             try {
                 teamsText[q] = teams.get(q).getAttribute("textContent").trim();
+            } catch (StaleElementReferenceException e) {
+                teamsText[q] = "N/A";
+                System.out.println("ignored1");
+            }
+        }
+
+        for(int q = 0; q < odds.size(); q++) {
+            try {
                 oddsText[q] = odds.get(q).getAttribute("textContent").replaceAll("\\s", "");
             } catch (StaleElementReferenceException e) {
-                System.out.println("ignored.");
+                oddsText[q] = "-100000";
+                System.out.println("ignored2");
             }
         }
 
 
-        for (int i = 0; i < teams.size(); i++) {
-
-            for (int j = i + 1; j < teams.size(); j++) {
-               boolean tru = false;
-               try {
-                   tru = teams.get(i).getAttribute("textContent").trim().equals(teams.get(j).getAttribute("textContent").trim());
-               } catch (StaleElementReferenceException ignored) {
-                   System.out.println("Stale!");
-               }
-
-                    if (tru ) {
-                        System.out.println("true!");
-                       //System.out.println(teams.get(j).getAttribute("textContent").trim());
-                        Duplicates[count][0] = teams.get(j).getAttribute("textContent").trim();
-                        //teams.remove(i);
-                        //Duplicates[count+1][0] = teams.get(j);
-
-                        if (count2 % 2 == 0 && count2 != 0)
-                            count2 += 4;
 
 
-                        Duplicates[count][1] = odds.get(i).getAttribute("textContent").replaceAll("\\s", "");
-                        Duplicates[count][2] = odds.get(j).getAttribute("textContent").replaceAll("\\s", "");
+        for (int i = 0; i < teamsText.length; i++) {
 
-System.out.println(Duplicates[count][0] +" " + Duplicates[count][1] + " " +Duplicates[count][2] );
+            for (int j = i + 1; j < teamsText.length; j++) {
+                System.out.println(j + " " + teamsText.length + Duplicates.length);
+                boolean tru = Objects.equals(teamsText[i], teamsText[j]) && !Objects.equals(teamsText[j], "N/A");
+                System.out.println(teamsText[j]);
+                if (tru) {
+                    System.out.println(teamsText[j]);
+                    //System.out.println(teams.get(j).getAttribute("textContent").trim());
+                    Duplicates[count][0] = teamsText[j];
+                    //teams.remove(i);
+                    //Duplicates[count+1][0] = teams.get(j);
+
+                    if (count2 % 2 == 0 && count2 != 0)
+                        count2 += 4;
+
+
+                    Duplicates[count][1] = oddsText[i];
+                    Duplicates[count][2] = oddsText[j];
+
+                    System.out.println(Duplicates[count][0] +" " + Duplicates[count][1] + " " +Duplicates[count][2] );
+                    count++;
+
+                    //table2.addRow(table.data.get(i).get(0), table.data.get(i).get(1), table.data.get(i).get(2), table.data.get(i).get(3), table.data.get(j).get(1), table.data.get(j).get(2), table.data.get(j).get(3));
+                    int n = i / 2;
+                    if (n == (i + 1) / 2) {
+                        //table2.addRow(table.data.get(i + 1).get(0), table.data.get(i + 1).get(1), table.data.get(i + 1).get(2), table.data.get(i + 1).get(3), table.data.get(j + 1).get(1), table.data.get(j + 1).get(2), table.data.get(j + 1).get(3));
+                        //table.data.remove(j + 1);
+                        Duplicates[count][0] = teamsText[i+1];
+                        Duplicates[count][1] = oddsText[i+1];
+                        Duplicates[count][2] = oddsText[j+1];
+                        teamsText[i+1] = null;
+                        oddsText[i+1] = null;
+                        oddsText[j+1] = null;
+
+                        //teams.remove(i+1);
+                        //odds.remove(i+1);
+                        //odds.remove(j+1);
                         count++;
-
-                        //table2.addRow(table.data.get(i).get(0), table.data.get(i).get(1), table.data.get(i).get(2), table.data.get(i).get(3), table.data.get(j).get(1), table.data.get(j).get(2), table.data.get(j).get(3));
-                        int n = i / 2;
-                        if (n == (i + 1) / 2) {
-                            //table2.addRow(table.data.get(i + 1).get(0), table.data.get(i + 1).get(1), table.data.get(i + 1).get(2), table.data.get(i + 1).get(3), table.data.get(j + 1).get(1), table.data.get(j + 1).get(2), table.data.get(j + 1).get(3));
-                            //table.data.remove(j + 1);
-                            Duplicates[count][0] = teams.get(i + 1).getAttribute("textContent").trim();
-                            Duplicates[count][1] = odds.get(i+1).getAttribute("textContent").replaceAll("\\s", "");
-                            Duplicates[count][2] = odds.get(j+1).getAttribute("textContent").replaceAll("\\s", "");
-                            teams.remove(i+1);
-                            odds.remove(i+1);
-                            odds.remove(j+1);
-                            count++;
-                        }
-
-                        else {
-                            Duplicates[count][0] = teams.get(i - 1).getAttribute("textContent").trim();
-                            Duplicates[count][1] = odds.get(i-1).getAttribute("textContent").replaceAll("\\s", "");
-                            Duplicates[count][2] = odds.get(j-1).getAttribute("textContent").replaceAll("\\s", "");
-                            teams.remove(i-1);
-                            odds.remove(i-1);
-                            odds.remove(j-1);
-                            i--;
-                            count++;
-                        }
-
-
-                     count2++;   //table2.addRow(table.data.get(i - 1).get(0), table.data.get(i - 1).get(1), table.data.get(i - 1).get(2), table.data.get(i - 1).get(3), table.data.get(j - 1).get(1), table.data.get(j - 1).get(2), table.data.get(j - 1).get(3));
-
                     }
+
+                    else {
+                        Duplicates[count][0] = teamsText[i-1];
+                        Duplicates[count][1] = oddsText[i-1];
+                        Duplicates[count][2] = oddsText[j-1];
+                        teamsText[i-1] = null;
+                        oddsText[i-1] = null;
+                        oddsText[j-1] = null;
+
+                        //teams.remove(i-1);
+                        //odds.remove(i-1);
+                        //odds.remove(j-1);
+                        //i--;
+                        count++;
+                    }
+
+
+
+
+                    count2++;   //table2.addRow(table.data.get(i - 1).get(0), table.data.get(i - 1).get(1), table.data.get(i - 1).get(2), table.data.get(i - 1).get(3), table.data.get(j - 1).get(1), table.data.get(j - 1).get(2), table.data.get(j - 1).get(3));
+
+                }
             }
             k+=3;
         }
@@ -547,17 +565,12 @@ System.out.println(Duplicates[count][0] +" " + Duplicates[count][1] + " " +Dupli
         int counter = 0;
         int a = Duplicates.length-1;
         for(int i = 0; i < Duplicates.length; i++) {
-            if(Duplicates[i][0] == null) {
+            if(Objects.equals(Duplicates[i][0], null)) {
                 a = i;
                 break;
             }
         }
 
-        for(int b = 0; b < Duplicates.length; b++) {
-
-                System.out.println(Duplicates[b][0] + "   d");
-
-        }
 
         for (int i = 0; i < a; i += 2) {
             double impliedProb = 0;
@@ -568,83 +581,92 @@ System.out.println(Duplicates[count][0] +" " + Duplicates[count][1] + " " +Dupli
             double probD = 1;
             boolean b;
 
-                int oddA;
-                int oddC;
-                int oddB;
-                int oddD;
-                String moneyline1;
-                String moneyline2;
-moneyline1 = Duplicates[i][1];
-moneyline2 = Duplicates[i][2];
+            int oddA;
+            int oddC;
+            int oddB;
+            int oddD;
+            String moneyline1;
+            String moneyline2;
+            moneyline1 = Duplicates[i][1];
+            moneyline2 = Duplicates[i][2];
 
 
 
             if (moneyline1.contains("+")) {
-                    oddA = Integer.parseInt(moneyline1.substring(1));
-                    probA = (double) 100 / (100 + (oddA));
-                } else if (moneyline1.contains("-")) {
-                    oddA = Integer.parseInt(moneyline1.substring(1));
-                    probA = (double) oddA / (100 + (oddA));
-                }
-                if (moneyline2.contains("+")) {
-                    oddB = Integer.parseInt(moneyline2.substring(1));
-                    probB = (double) 100 / (100 + (oddB));
-                } else if (moneyline2.contains("-")) {
-                    oddB = Integer.parseInt(moneyline2.substring(1));
-                    probB = (double) oddB / (100 + (oddB));
-                }
-                impliedProb += probA;
-                impliedProb2 += probB;
+                oddA = Integer.parseInt(moneyline1.substring(1));
+                probA = (double) 100 / (100 + (oddA));
+            } else if (moneyline1.contains("-")) {
+                oddA = Integer.parseInt(moneyline1.substring(1));
+                probA = (double) oddA / (100 + (oddA));
+            }
+            else {
+                probA = 0.5;
+            }
+            if (moneyline2.contains("+")) {
+                oddB = Integer.parseInt(moneyline2.substring(1));
+                probB = (double) 100 / (100 + (oddB));
+            } else if (moneyline2.contains("-")) {
+                oddB = Integer.parseInt(moneyline2.substring(1));
+                probB = (double) oddB / (100 + (oddB));
+            } else
+                probB = 0.5;
+
+            impliedProb += probA;
+            impliedProb2 += probB;
 
 
             moneyline1 = Duplicates[i+1][1];
             moneyline2 = Duplicates[i+1][2];
 
-                if (moneyline1.contains("+")) {
-                    oddC = Integer.parseInt(moneyline1.substring(1));
-                    probA = (double) 100 / (100 + (oddC));
-                    //  System.out.println(probA);
+            if (moneyline1.contains("+")) {
+                oddC = Integer.parseInt(moneyline1.substring(1));
+                probA = (double) 100 / (100 + (oddC));
+                //  System.out.println(probA);
 
-                } else if (moneyline1.contains("-")) {
-                    oddC = Integer.parseInt(moneyline1.substring(1));
-                    probA = (double) oddC / (100 + (oddC));
-                    // System.out.println(probA);
-                }
-
-
-                if (moneyline2.contains("+")) {
-                    oddD = Integer.parseInt(moneyline2.substring(1));
-                    probB = (double) 100 / (100 + (oddD));
-                    // System.out.println(probB);
-                } else if (moneyline2.contains("-")) {
-                    oddD = Integer.parseInt(moneyline2.substring(1));
-                    probB = (double) oddD / (100 + (oddD));
-                    // System.out.println(probB);
-                }
-                impliedProb += probB;
-                impliedProb2 += probA;
-                double q = 100 * ((1 / Math.min(impliedProb, impliedProb2)) - 1);
-                double netIncome = (double) Math.round(q * 100) / 100;
+            } else if (moneyline1.contains("-")) {
+                oddC = Integer.parseInt(moneyline1.substring(1));
+                probA = (double) oddC / (100 + (oddC));
+                // System.out.println(probA);
+            }
+            else
+                probA = 0.5;
 
 
+            if (moneyline2.contains("+")) {
+                oddD = Integer.parseInt(moneyline2.substring(1));
+                probB = (double) 100 / (100 + (oddD));
+                // System.out.println(probB);
+            } else if (moneyline2.contains("-")) {
+                oddD = Integer.parseInt(moneyline2.substring(1));
+                probB = (double) oddD / (100 + (oddD));
+                // System.out.println(probB);
+            } else
+                probB = 0.5;
 
-                if (impliedProb < 1 || impliedProb2 < 1) {
-                    System.out.print("Arbitrage Found | " + Duplicates[i][0] + " v. " + Duplicates[i+1][0] + " | Profit: " + netIncome + "%");
-                   Arbitrages[counter][0] = Duplicates[i][0];
-                   Arbitrages[counter][1] = Duplicates[i+1][0];
-                   Arbitrages[counter][2] = Double.toString(netIncome);
-                    counter++;
-                } else {
-                    System.out.print("No | " + Duplicates[i][0] + " v. " + Duplicates[i+1][0] + " | Loss: " + netIncome + "%");
-                    Arbitrages[counter][0] = Duplicates[i][0];
-                    Arbitrages[counter][1] = Duplicates[i+1][0];
-                    Arbitrages[counter][2] = Double.toString(netIncome);
-                    counter++;
-                }
-                if (impliedProb < impliedProb2)
-                    System.out.print("  |  [" + Duplicates[i][1] + " / " + Duplicates[i+1][2] + "]\n");
-                else
-                    System.out.print("  |  [" + Duplicates[i][2] + " / " + Duplicates[i+1][1] + "]\n");
+            impliedProb += probB;
+            impliedProb2 += probA;
+            double q = 100 * ((1 / Math.min(impliedProb, impliedProb2)) - 1);
+            double netIncome = (double) Math.round(q * 100) / 100;
+
+
+
+            if (impliedProb < 1 || impliedProb2 < 1) {
+                System.out.print("Arbitrage Found | " + Duplicates[i][0] + " v. " + Duplicates[i+1][0] + " | Profit: " + netIncome + "%");
+                Arbitrages[counter][0] = Duplicates[i][0];
+                Arbitrages[counter][1] = Duplicates[i+1][0];
+                Arbitrages[counter][2] = Double.toString(netIncome);
+                counter++;
+            } else {
+                System.out.print("No | " + Duplicates[i][0] + " v. " + Duplicates[i+1][0] + " | Loss: " + netIncome + "%");
+                Arbitrages[counter][0] = Duplicates[i][0];
+                Arbitrages[counter][1] = Duplicates[i+1][0];
+                Arbitrages[counter][2] = Double.toString(netIncome);
+                counter++;
+            }
+            if (impliedProb < impliedProb2)
+                System.out.print("  |  [" + Duplicates[i][1] + " / " + Duplicates[i+1][2] + "]\n");
+            else
+                System.out.print("  |  [" + Duplicates[i][2] + " / " + Duplicates[i+1][1] + "]\n");
 
 
 
@@ -653,49 +675,49 @@ moneyline2 = Duplicates[i][2];
         writeToExcel(Arbitrages);
     }
     public void writeToExcel(String[][] arbitrageTable) throws IOException {
-String[] header = {"Team 1", "Team 2", "Total Return", "Time"};
+        String[] header = {"Team 1", "Team 2", "Total Return", "Time"};
 
-FileInputStream input = null;
-try {
-    input = new FileInputStream("test.xlsx");
-} catch(FileNotFoundException e) {
-    throw new RuntimeException(e);
-}
+        FileInputStream input = null;
+        try {
+            input = new FileInputStream("test.xlsx");
+        } catch(FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         XSSFSheet spreadsheet;
-XSSFWorkbook workbook = new XSSFWorkbook(input);
+        XSSFWorkbook workbook = new XSSFWorkbook(input);
 
-if(workbook.getNumberOfSheets() == 0)
- spreadsheet = workbook.createSheet("Arbitrages");
-else
-    spreadsheet = workbook.getSheet("Arbitrages");
+        if(workbook.getNumberOfSheets() == 0)
+            spreadsheet = workbook.createSheet("Arbitrages");
+        else
+            spreadsheet = workbook.getSheet("Arbitrages");
 
-XSSFRow row;
+        XSSFRow row;
 
-Row headerRow = spreadsheet.createRow(0);
-for(int a = 0; a < header.length; a++) {
-    Cell cell = headerRow.createCell(a);
-    cell.setCellValue(header[a]);
-}
-int lastRow = spreadsheet.getLastRowNum();
-for(int i = 1; i < (arbitrageTable.length/2)+1; i++) {
-    row = spreadsheet.createRow(lastRow+i);
-    for(int j = 0; j < 3; j++) {
-        Cell cell = row.createCell(j);
+        Row headerRow = spreadsheet.createRow(0);
+        for(int a = 0; a < header.length; a++) {
+            Cell cell = headerRow.createCell(a);
+            cell.setCellValue(header[a]);
+        }
+        int lastRow = spreadsheet.getLastRowNum();
+        for(int i = 1; i < (arbitrageTable.length/2)+1; i++) {
+            row = spreadsheet.createRow(lastRow+i);
+            for(int j = 0; j < 3; j++) {
+                Cell cell = row.createCell(j);
 
-        cell.setCellValue(arbitrageTable[i-1][j]);
-    }
-    Cell cell = row.createCell(3);
-    cell.setCellValue(LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute());
-}
+                cell.setCellValue(arbitrageTable[i-1][j]);
+            }
+            Cell cell = row.createCell(3);
+            cell.setCellValue(LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute());
+        }
 
-try {
-    FileOutputStream out = new FileOutputStream(new File("test.xlsx"));
-    workbook.write(out);
-    out.close();
-} catch(FileNotFoundException ignored) {
-    System.out.println("File not found");
-} catch (IOException e) {
-    throw new RuntimeException(e);
-}
+        try {
+            FileOutputStream out = new FileOutputStream(new File("test.xlsx"));
+            workbook.write(out);
+            out.close();
+        } catch(FileNotFoundException ignored) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
