@@ -494,11 +494,8 @@ Collections.swap(odds, j+2, j+1);
         for (int i = 0; i < teamsText.length; i++) {
 
             for (int j = i + 1; j < teamsText.length; j++) {
-                System.out.println(j + " " + teamsText.length + Duplicates.length);
                 boolean tru = Objects.equals(teamsText[i], teamsText[j]) && !Objects.equals(teamsText[j], "N/A");
-                System.out.println(teamsText[j]);
                 if (tru) {
-                    System.out.println(teamsText[j]);
                     //System.out.println(teams.get(j).getAttribute("textContent").trim());
                     Duplicates[count][0] = teamsText[j];
                     //teams.remove(i);
